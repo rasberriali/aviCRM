@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1752005123456,
+    "workspaceId": 1751985060510,
+    "name": "Emergency Calls",
+    "description": "Urgent service calls requiring immediate attention",
+    "color": "#ef4444",
+    "createdAt": "2025-07-08T20:05:23.456Z",
+    "updatedAt": "2025-07-08T20:05:23.456Z"
+  },
+  {
+    "id": 1752005234567,
+    "workspaceId": 1751985060510,
+    "name": "Scheduled Maintenance",
+    "description": "Regular maintenance and service appointments",
+    "color": "#10b981",
+    "createdAt": "2025-07-08T20:07:14.567Z",
+    "updatedAt": "2025-07-08T20:07:14.567Z"
+  }
+]

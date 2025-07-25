@@ -1,0 +1,32 @@
+{
+  "name": "AVI Projects Mobile",
+  "short_name": "AVI Projects",
+  "description": "Professional workspace management for mobile devices",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#9521c0",
+  "theme_color": "#9521c0",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot1.png",
+      "sizes": "720x1280",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["productivity", "business"],
+  "version": "1.0.2"
+}

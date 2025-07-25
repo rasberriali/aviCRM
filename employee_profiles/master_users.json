@@ -1,0 +1,164 @@
+[
+  {
+    "id": "1",
+    "username": "JSmith",
+    "firstName": "John",
+    "lastName": "Smith",
+    "email": "john.s@avicentral.com",
+    "role": "administrator",
+    "department": "Management",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": true,
+      "fileManagement": true
+    },
+    "active": true
+  },
+  {
+    "id": "2",
+    "username": "MJohnson",
+    "firstName": "Mary",
+    "lastName": "Johnson",
+    "email": "mary.j@avicentral.com",
+    "role": "accounting_manager",
+    "department": "Accounting",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true
+  },
+  {
+    "id": "3",
+    "username": "Edevries",
+    "firstName": "Ethan",
+    "lastName": "DeVries",
+    "email": "ethan.d@avicentral.com",
+    "role": "director_of_sales",
+    "department": "Sales",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": true,
+      "fileManagement": true
+    },
+    "active": true
+  },
+  {
+    "id": "4",
+    "username": "Jrensink",
+    "firstName": "Jeremy",
+    "lastName": "Rensink",
+    "email": "jeremy.r@avicentral.com",
+    "role": "operations_manager",
+    "department": "Management",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": true,
+      "fileManagement": true
+    },
+    "active": true
+  },
+  {
+    "id": "5",
+    "username": "THoffmeyer",
+    "firstName": "Taylor",
+    "lastName": "Hoffmeyer",
+    "email": "taylor.h@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": false,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true
+  },
+  {
+    "id": "6",
+    "username": "TAndersen",
+    "firstName": "Tony",
+    "lastName": "Andersen",
+    "email": "tony.a@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": false,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true
+  },
+  {
+    "id": "7",
+    "username": "LClaggett",
+    "firstName": "Luke",
+    "lastName": "Claggett",
+    "email": "luke.c@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": false,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true
+  },
+  {
+    "id": "8",
+    "username": "CMacDonald",
+    "firstName": "Chris",
+    "lastName": "Mac Donald",
+    "email": "chris.m@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": false,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true
+  },
+  {
+    "id": "9",
+    "username": "CBarry",
+    "firstName": "Chad",
+    "lastName": "Barry",
+    "email": "chad.b@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": true,
+      "fileManagement": true
+    },
+    "active": true
+  }
+]

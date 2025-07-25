@@ -1,0 +1,39 @@
+{
+  "username": "Jrensink",
+  "userId": "4",
+  "tasks": [
+    {
+      "id": 1752849219389,
+      "title": "Test Android Notification Task",
+      "description": "This is a test task to verify the Android notification system works correctly",
+      "employeeId": "4",
+      "projectId": "test-project-1",
+      "priority": "urgent",
+      "dueDate": "2025-07-19T00:00:00Z",
+      "notificationSettings": {
+        "intervals": [
+          300,
+          900,
+          1800,
+          3600
+        ],
+        "persistUntilComplete": true,
+        "urgencyLevel": "high"
+      },
+      "assignedAt": "2025-07-18T14:33:39.389Z",
+      "status": "assigned"
+    }
+  ],
+  "lastUpdated": "2025-07-18T14:33:39.390Z",
+  "notificationSettings": {
+    "enabled": true,
+    "frequencies": [
+      300,
+      900,
+      1800,
+      3600
+    ],
+    "persistUntilComplete": true,
+    "urgencyLevel": "high"
+  }
+}

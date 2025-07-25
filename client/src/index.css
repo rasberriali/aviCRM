@@ -1,0 +1,282 @@
+/* Import mobile-specific styles */
+@import url('./styles/mobile.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mobile-first responsive design */
+@media (max-width: 768px) {
+  /* Make workspace cards stack vertically */
+  .workspace-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  /* Adjust project modal for mobile */
+  .project-modal {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    height: 90vh !important;
+    max-height: 90vh !important;
+  }
+  
+  /* Mobile-friendly buttons */
+  .mobile-button {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+    min-height: 44px !important; /* iOS touch target size */
+  }
+  
+  /* Responsive text */
+  .mobile-text {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+  }
+  
+  /* Mobile navigation */
+  .mobile-nav {
+    padding: 0.5rem !important;
+  }
+  
+  /* Touch-friendly dropdowns */
+  .mobile-dropdown {
+    min-height: 44px !important;
+  }
+}
+
+/* Progressive Web App styles */
+.pwa-install-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #9521c0;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  z-index: 1000;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.pwa-install-banner.visible {
+  transform: translateY(0);
+}
+
+@media (display-mode: standalone) {
+  /* Styles for when app is installed as PWA */
+  .pwa-only {
+    display: block !important;
+  }
+  
+  .web-only {
+    display: none !important;
+  }
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 207 90% 54%; /* #0078D4 */
+  --primary-foreground: 211 100% 99%;
+  --secondary: 60 4.8% 95.9%;
+  --secondary-foreground: 24 9.8% 10%;
+  --accent: 60 4.8% 95.9%;
+  --accent-foreground: 24 9.8% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 20 14.3% 4.1%;
+  --radius: 0.5rem;
+  
+  /* Custom colors matching design */
+  --primary-dark: 215 100% 47%; /* #106EBE */
+  --accent-blue: 194 100% 47%; /* #00BCF2 */
+  --neutral-900: 210 3% 20%; /* #323130 */
+  --neutral-700: 210 3% 38%; /* #605E5C */
+  --neutral-500: 210 3% 54%; /* #8A8886 */
+  --neutral-300: 210 3% 78%; /* #C8C6C4 */
+  --neutral-100: 210 11% 95%; /* #F3F2F1 */
+  --surface: 0 0% 100%; /* #FFFFFF */
+  --success: 120 100% 25%; /* #107C10 */
+  --warning: 30 100% 50%; /* #FF8C00 */
+  --error: 354 70% 54%; /* #D13438 */
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 207 90% 54%;
+  --primary-foreground: 211 100% 99%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    user-select: none;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .text-primary-dark {
+    color: hsl(var(--primary-dark));
+  }
+  
+  .bg-primary-dark {
+    background-color: hsl(var(--primary-dark));
+  }
+  
+  .hover\:bg-primary-dark:hover {
+    background-color: hsl(var(--primary-dark));
+  }
+  
+  .text-accent {
+    color: hsl(var(--accent-blue));
+  }
+  
+  .text-success {
+    color: hsl(var(--success));
+  }
+  
+  .bg-success {
+    background-color: hsl(var(--success));
+  }
+  
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+  
+  .bg-warning {
+    background-color: hsl(var(--warning));
+  }
+  
+  .text-error {
+    color: hsl(var(--error));
+  }
+  
+  .bg-error {
+    background-color: hsl(var(--error));
+  }
+  
+  .text-neutral-900 {
+    color: hsl(var(--neutral-900));
+  }
+  
+  .text-neutral-700 {
+    color: hsl(var(--neutral-700));
+  }
+  
+  .text-neutral-500 {
+    color: hsl(var(--neutral-500));
+  }
+  
+  .text-neutral-300 {
+    color: hsl(var(--neutral-300));
+  }
+  
+  .bg-neutral-100 {
+    background-color: hsl(var(--neutral-100));
+  }
+  
+  .bg-surface {
+    background-color: hsl(var(--surface));
+  }
+  
+  .border-neutral-200 {
+    border-color: hsl(var(--neutral-300));
+  }
+  
+  .border-neutral-300 {
+    border-color: hsl(var(--neutral-300));
+  }
+}
+
+/* Custom animations for desktop feel */
+@keyframes pulse-connection {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  50% { 
+    opacity: 0.5; 
+  }
+}
+
+.animate-pulse-connection {
+  animation: pulse-connection 1.5s infinite;
+}
+
+/* Context menu styling */
+.context-menu {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Drag and drop styling */
+.drag-over {
+  background-color: hsl(var(--primary) / 0.1) !important;
+  border: 2px dashed hsl(var(--primary)) !important;
+}
+
+/* File selection styling */
+.file-selected {
+  background-color: hsl(var(--primary) / 0.1);
+  border-left: 4px solid hsl(var(--primary));
+}
+
+/* Scrollbar styling for desktop feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--neutral-100));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--neutral-300));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--neutral-500));
+}

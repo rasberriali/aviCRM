@@ -1,0 +1,200 @@
+[
+  {
+    "id": "EMP_001",
+    "employeeId": "1",
+    "username": "Jsmith",
+    "firstName": "John",
+    "lastName": "Smith",
+    "email": "john.s@avicentral.com",
+    "role": "admin",
+    "department": "IT",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": true,
+      "fileManagement": true
+    },
+    "active": true,
+    "profileDirectory": "./employee_profiles/EMP_001",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "EMP_002",
+    "employeeId": "2",
+    "username": "Mjohnson",
+    "firstName": "Mary",
+    "lastName": "Johnson",
+    "email": "mary.j@avicentral.com",
+    "role": "project_manager",
+    "department": "Operations",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true,
+    "profileDirectory": "./employee_profiles/EMP_002",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "EMP_003",
+    "employeeId": "3",
+    "username": "Edevries",
+    "firstName": "Ethan",
+    "lastName": "DeVries",
+    "email": "ethan.d@avicentral.com",
+    "role": "director_of_sales",
+    "department": "Sales",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": true,
+      "fileManagement": true
+    },
+    "active": true,
+    "profileDirectory": "./employee_profiles/EMP_003",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "EMP_004",
+    "employeeId": "4",
+    "username": "Jrensink",
+    "firstName": "Jeremy",
+    "lastName": "Rensink",
+    "email": "jeremy.r@avicentral.com",
+    "role": "operations_manager",
+    "department": "Management",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": true,
+      "fileManagement": true
+    },
+    "active": true,
+    "profileDirectory": "./employee_profiles/EMP_004",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "EMP_005",
+    "employeeId": "5",
+    "username": "Thoffmeyer",
+    "firstName": "Taylor",
+    "lastName": "Hoffmeyer",
+    "email": "taylor.h@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": false,
+      "projects": true,
+      "timeTracking": true,
+      "reports": false,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true,
+    "profileDirectory": "./employee_profiles/EMP_005",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "EMP_006",
+    "employeeId": "6",
+    "username": "Tandersen",
+    "firstName": "Tony",
+    "lastName": "Andersen",
+    "email": "tony.a@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": false,
+      "projects": true,
+      "timeTracking": true,
+      "reports": false,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true,
+    "profileDirectory": "./employee_profiles/EMP_006",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "EMP_007",
+    "employeeId": "7",
+    "username": "Lclaggett",
+    "firstName": "Luke",
+    "lastName": "Claggett",
+    "email": "luke.c@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": false,
+      "projects": true,
+      "timeTracking": true,
+      "reports": false,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true,
+    "profileDirectory": "./employee_profiles/EMP_007",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "EMP_008",
+    "employeeId": "8",
+    "username": "Cmacdonald",
+    "firstName": "Chris",
+    "lastName": "Mac Donald",
+    "email": "chris.m@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": false,
+      "projects": true,
+      "timeTracking": true,
+      "reports": false,
+      "admin": false,
+      "fileManagement": true
+    },
+    "active": true,
+    "profileDirectory": "./employee_profiles/EMP_008",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "EMP_009",
+    "employeeId": "9",
+    "username": "Cbarry",
+    "firstName": "Chad",
+    "lastName": "Barry",
+    "email": "chad.b@avicentral.com",
+    "role": "programmer",
+    "department": "Programming",
+    "permissions": {
+      "accounting": true,
+      "projects": true,
+      "timeTracking": true,
+      "reports": true,
+      "admin": true,
+      "fileManagement": true
+    },
+    "active": true,
+    "profileDirectory": "./employee_profiles/EMP_009",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  }
+]

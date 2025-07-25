@@ -1,0 +1,13 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" rx="24" fill="#9521c0"/>
+  <path d="M48 60h96v12H48V60z" fill="white"/>
+  <path d="M48 84h96v12H48V84z" fill="white"/>
+  <path d="M48 108h96v12H48V108z" fill="white"/>
+  <path d="M48 132h96v12H48V132z" fill="white"/>
+  <circle cx="36" cy="66" r="4" fill="white"/>
+  <circle cx="36" cy="90" r="4" fill="white"/>
+  <circle cx="36" cy="114" r="4" fill="white"/>
+  <circle cx="36" cy="138" r="4" fill="white"/>
+  <text x="96" y="40" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">AVI</text>
+  <text x="96" y="168" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Projects</text>
+</svg>

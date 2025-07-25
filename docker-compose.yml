@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  crm-app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - SESSION_SECRET=${SESSION_SECRET}
+    restart: unless-stopped
+    volumes:
+      - ./employee_profiles:/app/employee_profiles:ro
+    networks:
+      - crm-network
+
+networks:
+  crm-network:
+    driver: bridge
