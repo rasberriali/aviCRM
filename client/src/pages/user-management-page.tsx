@@ -60,15 +60,22 @@ export default function UserManagementPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch employees
-  const { data: employees = [], isLoading } = useQuery({
+  const { data: employeeData, isLoading } = useQuery({
     queryKey: ['/api/employees'],
     retry: false
   });
 
+  // Extract employees array with proper type safety
+  const employees = Array.isArray((employeeData as any)?.employees) 
+    ? (employeeData as any).employees 
+    : Array.isArray(employeeData) 
+      ? employeeData 
+      : [];
+
   // Update permissions mutation
   const updatePermissionsMutation = useMutation({
     mutationFn: async ({ userId, permissions }: { userId: string; permissions: PermissionForm }) => {
-      const response = await apiRequest('PATCH', `/api/admin/users/${userId}/permissions`, { permissions });
+      const response = await apiRequest(`/api/admin/users/${userId}/permissions`, 'PATCH', JSON.stringify({ permissions }));
       return response.json();
     },
     onSuccess: (data, variables) => {
@@ -99,7 +106,7 @@ export default function UserManagementPage() {
         admin: true,
         fileManagement: true
       };
-      const response = await apiRequest('PATCH', `/api/admin/users/${userId}/permissions`, { permissions: adminPermissions });
+      const response = await apiRequest(`/api/admin/users/${userId}/permissions`, 'PATCH', JSON.stringify({ permissions: adminPermissions }));
       return response.json();
     },
     onSuccess: () => {

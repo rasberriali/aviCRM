@@ -139,10 +139,13 @@ export default function Clients() {
     },
   });
 
+  
+
   // Fetch clients from file-based system with upload capability
   const fetchClients = async () => {
     try {
       setIsLoadingClients(true);
+      
       const response = await fetch('/api/clients/download');
       if (response.ok) {
         const csvData = await response.json();

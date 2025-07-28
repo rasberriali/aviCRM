@@ -75,58 +75,17 @@ export default function AdministrationPageSimple() {
     retry: false
   });
 
-  // Fetch categories for each workspace to get live project data
-  const workspaceCategoryQueries = (workspaces || []).map((workspace: any) =>
-    useQuery({
-      queryKey: ['/api/workspaces', workspace.id, 'categories'],
-      queryFn: async () => {
-        const response = await apiRequest(`/api/workspaces/${workspace.id}/categories`, 'GET');
-        return response.json();
-      },
-      enabled: !!workspace.id,
-      retry: false
-    })
-  );
+  // Get safe workspaces array
+  const safeWorkspaces = Array.isArray(workspaces) ? workspaces : [];
 
-  // Get all categories from all workspaces
-  const allCategories = workspaceCategoryQueries
-    .map(query => query.data || [])
-    .flat()
-    .filter(category => category);
+  // Fetch all projects directly (simplified approach)
+  const { data: allProjects = [] } = useQuery({
+    queryKey: ['/api/projects'],
+    retry: false
+  });
 
-  // Fetch projects for each category
-  const categoryProjectQueries = allCategories.map((category: any) =>
-    useQuery({
-      queryKey: ['/api/workspaces', category.workspaceId, 'categories', category.id, 'projects'],
-      queryFn: async () => {
-        const response = await apiRequest(`/api/workspaces/${category.workspaceId}/categories/${category.id}/projects`, 'GET');
-        return response.json();
-      },
-      enabled: !!category.id && !!category.workspaceId,
-      retry: false
-    })
-  );
-
-  // Fetch uncategorized projects for each workspace
-  const uncategorizedProjectQueries = (workspaces || []).map((workspace: any) =>
-    useQuery({
-      queryKey: ['/api/workspaces', workspace.id, 'projects'],
-      queryFn: async () => {
-        const response = await apiRequest(`/api/workspaces/${workspace.id}/projects`, 'GET');
-        return response.json();
-      },
-      enabled: !!workspace.id,
-      retry: false
-    })
-  );
-
-  // Combine all LIVE projects from workspaces
-  const allLiveProjects = [
-    // Projects from categories
-    ...categoryProjectQueries.flatMap(query => query.data || []),
-    // Uncategorized projects
-    ...uncategorizedProjectQueries.flatMap(query => query.data || [])
-  ].filter(project => project && project.id && project.status !== 'archived');
+  // Get safe projects array
+  const safeProjects = Array.isArray(allProjects) ? allProjects : [];
 
   // Fetch task assignments
   const { data: taskAssignments = [], isLoading: tasksLoading } = useQuery({
@@ -135,20 +94,19 @@ export default function AdministrationPageSimple() {
   });
 
   // Get employees array with null safety
-  const employees = Array.isArray(employeeData?.employees) ? employeeData.employees.map((emp: any) => ({
+  const employees = Array.isArray((employeeData as any)?.employees) ? (employeeData as any).employees.map((emp: any) => ({
     ...emp,
     id: emp.employeeId || emp.id
   })) : [];
 
   // Add null safety for all data arrays
-  const safeWorkspaces = Array.isArray(workspaces) ? workspaces : [];
   const safeTaskAssignments = Array.isArray(taskAssignments) ? taskAssignments : [];
-  const safeProjects = Array.isArray(allLiveProjects) ? allLiveProjects : [];
 
   // Loading states
-  const projectsLoading = (workspaceCategoryQueries || []).some(query => query.isLoading) || 
-                         (categoryProjectQueries || []).some(query => query.isLoading) ||
-                         (uncategorizedProjectQueries || []).some(query => query.isLoading);
+  const projectsLoading = false; // Simplified since we're not doing complex queries
+
+  // Show loading state if data is still loading
+  const isLoading = employeesLoading || projectsLoading || tasksLoading;
 
   // Task assignment form
   const taskForm = useForm<TaskAssignmentForm>({
@@ -174,10 +132,10 @@ export default function AdministrationPageSimple() {
   // Assign task mutation
   const assignTaskMutation = useMutation({
     mutationFn: async (data: TaskAssignmentForm) => {
-      const response = await apiRequest('POST', '/api/admin/task-assignments', {
+      const response = await apiRequest('/api/admin/task-assignments', 'POST', JSON.stringify({
         ...data,
         assignedBy: 'Administrator'
-      });
+      }));
       return response.json();
     },
     onSuccess: () => {
@@ -197,6 +155,18 @@ export default function AdministrationPageSimple() {
       });
     }
   });
+
+  // Show loading state if data is still loading
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900 dark:border-white mx-auto"></div>
+          <p className="mt-2 text-slate-600 dark:text-slate-400">Loading administration data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -276,7 +246,7 @@ export default function AdministrationPageSimple() {
                               ) : (
                                 safeProjects.map((project: any) => (
                                   <SelectItem key={project.id} value={project.id.toString()}>
-                                    {project.name} - {project.customerName || 'No Customer'}
+                                    {project.name || project.title} - {project.customerName || 'No Customer'}
                                   </SelectItem>
                                 ))
                               )}

@@ -139,7 +139,14 @@ export default function DepartmentsPage() {
   });
 
   const { data: departments = {} as Record<string, any> } = useQuery({
-    queryKey: ["/api/departments"]
+    queryKey: ["/api/departments"],
+    queryFn: async () => {
+      const response = await fetch('/api/departments');
+      if (!response.ok) {
+        throw new Error('Failed to fetch departments');
+      }
+      return response.json();
+    }
   });
 
   const addEmployeeMutation = useMutation({
@@ -153,7 +160,7 @@ export default function DepartmentsPage() {
           ...data,
           salary: data.salary ? data.salary * 100 : null, // Convert to cents
           hourlyRate: data.hourlyRate ? data.hourlyRate * 100 : null,
-          permissions: departments[data.department]?.permissions || []
+          permissions: (departments as Record<string, any>)[data.department]?.permissions || []
         })
       });
       if (!response.ok) {
@@ -281,7 +288,7 @@ export default function DepartmentsPage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {Object.keys(departments).map((dept) => (
+                            {Object.keys(departments as Record<string, any>).map((dept) => (
                               <SelectItem key={dept} value={dept}>
                                 {dept}
                               </SelectItem>
@@ -451,14 +458,14 @@ export default function DepartmentsPage() {
 
       <Tabs value={selectedDepartment} onValueChange={setSelectedDepartment}>
         <TabsList className="grid w-full grid-cols-5">
-          {Object.keys(departments).map((dept) => (
+          {Object.keys(departments as Record <string,any>).map((dept) => (
             <TabsTrigger key={dept} value={dept} className="text-xs">
               {dept}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        {Object.entries(departments).map(([deptName, deptData]: [string, any]) => {
+        {Object.entries(departments as Record <string, any>).map(([deptName, deptData]: [string, any]) => {
           const stats = getDepartmentStats(deptName);
           const deptConfig = DEPARTMENTS[deptName as keyof typeof DEPARTMENTS] || {};
           const Icon = deptConfig.icon || Building;

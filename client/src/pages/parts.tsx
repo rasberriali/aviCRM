@@ -16,9 +16,17 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 
-const partFormSchema = insertProjectPartSchema.extend({
+const partFormSchema = z.object({
+  partName: z.string().min(1, 'Part name is required'),
+  description: z.string().optional(),
+  partNumber: z.string().optional(),
+  category: z.string().min(1, 'Category is required'),
+  vendor: z.string().optional(),
   unitPrice: z.number().min(0, 'Price must be positive'),
-  quantity: z.number().min(1, 'Quantity must be at least 1'),
+  quantityNeeded: z.number().min(1, 'Quantity must be at least 1'),
+  status: z.string().default('needed'),
+  priority: z.string().default('medium'),
+  notes: z.string().optional(),
 });
 
 type PartFormData = z.infer<typeof partFormSchema>;
@@ -68,17 +76,22 @@ export default function PartsPage() {
     queryKey: ['/api/parts/needed'],
   });
 
+  // Show loading state if any data is still loading
+  const isLoading = projectsLoading || neededPartsLoading || (selectedProject && partsLoading);
+
   const form = useForm<PartFormData>({
     resolver: zodResolver(partFormSchema),
     defaultValues: {
-      name: '',
+      partName: '',
       description: '',
       partNumber: '',
-      quantity: 1,
-      unitPrice: 0,
-      supplier: '',
-      status: 'needed',
       category: '',
+      vendor: '',
+      unitPrice: 0,
+      quantityNeeded: 1,
+      status: 'needed',
+      priority: 'medium',
+      notes: '',
     },
   });
 
@@ -86,10 +99,7 @@ export default function PartsPage() {
   const createPartMutation = useMutation({
     mutationFn: async (data: PartFormData) => {
       if (!selectedProject) throw new Error('No project selected');
-      return apiRequest(`/api/projects/${selectedProject}/parts`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      return apiRequest(`/api/projects/${selectedProject}/parts`, 'POST', JSON.stringify(data));
     },
     onSuccess: () => {
       toast({
@@ -114,10 +124,7 @@ export default function PartsPage() {
   const updatePartMutation = useMutation({
     mutationFn: async (data: Partial<PartFormData> & { id: number }) => {
       const { id, ...updateData } = data;
-      return apiRequest(`/api/parts/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(updateData),
-      });
+      return apiRequest(`/api/parts/${id}`, 'PUT', JSON.stringify(updateData));
     },
     onSuccess: () => {
       toast({
@@ -150,14 +157,16 @@ export default function PartsPage() {
   const handleEditPart = (part: ProjectPart) => {
     setEditingPart(part);
     form.reset({
-      name: part.name,
+      partName: part.partName,
       description: part.description || '',
       partNumber: part.partNumber || '',
-      quantity: part.quantity,
-      unitPrice: part.unitPrice || 0,
-      supplier: part.supplier || '',
+      category: part.category,
+      vendor: part.vendor || '',
+      unitPrice: typeof part.unitPrice === 'string' ? parseFloat(part.unitPrice) || 0 : (part.unitPrice || 0),
+      quantityNeeded: part.quantityNeeded,
       status: part.status,
-      category: part.category || '',
+      priority: part.priority,
+      notes: part.notes || '',
     });
     setIsPartDialogOpen(true);
   };
@@ -188,21 +197,36 @@ export default function PartsPage() {
     }
   };
 
-  const filteredNeededParts = neededParts.filter((part: ProjectPart) =>
-    part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredNeededParts = (neededParts as ProjectPart[] || []).filter((part: ProjectPart) =>
+    (part.partName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (part.partNumber && part.partNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (part.supplier && part.supplier.toLowerCase().includes(searchTerm.toLowerCase()))
+    (part.vendor && part.vendor.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const filteredProjectParts = projectParts.filter((part: ProjectPart) =>
-    part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredProjectParts = (projectParts as ProjectPart[] || []).filter((part: ProjectPart) =>
+    (part.partName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (part.partNumber && part.partNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (part.supplier && part.supplier.toLowerCase().includes(searchTerm.toLowerCase()))
+    (part.vendor && part.vendor.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const getTotalValue = (parts: ProjectPart[]) => {
-    return parts.reduce((total, part) => total + (part.quantity * (part.unitPrice || 0)), 0);
+    return parts.reduce((total, part) => {
+      const unitPrice = typeof part.unitPrice === 'string' ? parseFloat(part.unitPrice) || 0 : (part.unitPrice || 0);
+      return total + (part.quantityNeeded * unitPrice);
+    }, 0);
   };
+
+  // Show loading state if data is still loading
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900 dark:border-white mx-auto"></div>
+          <p className="mt-2 text-slate-600 dark:text-slate-400">Loading parts data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-6">
@@ -259,33 +283,33 @@ export default function PartsPage() {
                   <Card key={part.id} className="cursor-pointer hover:shadow-md transition-shadow"
                         onClick={() => handleEditPart(part)}>
                     <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-sm truncate">{part.name}</h3>
-                        {getStatusIcon(part.status)}
-                      </div>
-                      <div className="space-y-2">
-                        {part.partNumber && (
-                          <p className="text-xs text-muted-foreground">
-                            Part #: {part.partNumber}
-                          </p>
-                        )}
-                        <div className="flex items-center justify-between">
-                          <Badge className={getStatusColor(part.status)}>
-                            {part.status}
-                          </Badge>
-                          <span className="text-sm font-medium">Qty: {part.quantity}</span>
+                                              <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-semibold text-sm truncate">{part.partName}</h3>
+                          {getStatusIcon(part.status)}
                         </div>
-                        {part.unitPrice && part.unitPrice > 0 && (
-                          <div className="flex items-center justify-between text-xs">
-                            <span>Unit: ${part.unitPrice.toFixed(2)}</span>
-                            <span className="font-medium">Total: ${(part.quantity * part.unitPrice).toFixed(2)}</span>
+                        <div className="space-y-2">
+                          {part.partNumber && (
+                            <p className="text-xs text-muted-foreground">
+                              Part #: {part.partNumber}
+                            </p>
+                          )}
+                          <div className="flex items-center justify-between">
+                            <Badge className={getStatusColor(part.status)}>
+                              {part.status}
+                            </Badge>
+                            <span className="text-sm font-medium">Qty: {part.quantityNeeded}</span>
                           </div>
-                        )}
-                        {part.supplier && (
-                          <p className="text-xs text-muted-foreground">
-                            Supplier: {part.supplier}
-                          </p>
-                        )}
+                          {part.unitPrice && (typeof part.unitPrice === 'string' ? parseFloat(part.unitPrice) > 0 : part.unitPrice > 0) && (
+                            <div className="flex items-center justify-between text-xs">
+                              <span>Unit: ${(typeof part.unitPrice === 'string' ? parseFloat(part.unitPrice) : part.unitPrice).toFixed(2)}</span>
+                              <span className="font-medium">Total: ${(part.quantityNeeded * (typeof part.unitPrice === 'string' ? parseFloat(part.unitPrice) : part.unitPrice)).toFixed(2)}</span>
+                            </div>
+                          )}
+                          {part.vendor && (
+                            <p className="text-xs text-muted-foreground">
+                              Vendor: {part.vendor}
+                            </p>
+                          )}
                       </div>
                     </CardContent>
                   </Card>
@@ -315,7 +339,7 @@ export default function PartsPage() {
                 <SelectValue placeholder="Select a project" />
               </SelectTrigger>
               <SelectContent>
-                {projects.map((project: Project) => (
+                {(projects as Project[] || []).map((project: Project) => (
                   <SelectItem key={project.id} value={project.id.toString()}>
                     {project.name}
                   </SelectItem>
@@ -347,7 +371,7 @@ export default function PartsPage() {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                       <FormField
                         control={form.control}
-                        name="name"
+                        name="partName"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Part Name</FormLabel>
@@ -410,10 +434,10 @@ export default function PartsPage() {
                       <div className="grid grid-cols-3 gap-4">
                         <FormField
                           control={form.control}
-                          name="quantity"
+                          name="quantityNeeded"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Quantity</FormLabel>
+                              <FormLabel>Quantity Needed</FormLabel>
                               <FormControl>
                                 <Input 
                                   type="number" 
@@ -476,12 +500,12 @@ export default function PartsPage() {
 
                       <FormField
                         control={form.control}
-                        name="supplier"
+                        name="vendor"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Supplier</FormLabel>
+                            <FormLabel>Vendor</FormLabel>
                             <FormControl>
-                              <Input placeholder="Enter supplier name" {...field} />
+                              <Input placeholder="Enter vendor name" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -536,7 +560,7 @@ export default function PartsPage() {
                             onClick={() => handleEditPart(part)}>
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-2">
-                            <h3 className="font-semibold text-sm truncate">{part.name}</h3>
+                            <h3 className="font-semibold text-sm truncate">{part.partName}</h3>
                             {getStatusIcon(part.status)}
                           </div>
                           {part.description && (
@@ -554,17 +578,17 @@ export default function PartsPage() {
                               <Badge className={getStatusColor(part.status)}>
                                 {part.status}
                               </Badge>
-                              <span className="text-sm font-medium">Qty: {part.quantity}</span>
+                              <span className="text-sm font-medium">Qty: {part.quantityNeeded}</span>
                             </div>
-                            {part.unitPrice && part.unitPrice > 0 && (
+                            {part.unitPrice && (typeof part.unitPrice === 'string' ? parseFloat(part.unitPrice) > 0 : part.unitPrice > 0) && (
                               <div className="flex items-center justify-between text-xs">
-                                <span>Unit: ${part.unitPrice.toFixed(2)}</span>
-                                <span className="font-medium">Total: ${(part.quantity * part.unitPrice).toFixed(2)}</span>
+                                <span>Unit: ${(typeof part.unitPrice === 'string' ? parseFloat(part.unitPrice) : part.unitPrice).toFixed(2)}</span>
+                                <span className="font-medium">Total: ${(part.quantityNeeded * (typeof part.unitPrice === 'string' ? parseFloat(part.unitPrice) : part.unitPrice)).toFixed(2)}</span>
                               </div>
                             )}
-                            {part.supplier && (
+                            {part.vendor && (
                               <p className="text-xs text-muted-foreground">
-                                Supplier: {part.supplier}
+                                Vendor: {part.vendor}
                               </p>
                             )}
                             {part.category && (

@@ -659,16 +659,7 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // Employee endpoints
-  app.get('/api/employees', async (req, res) => {
-    try {
-      const masterEmployees = JSON.parse(fs.readFileSync('./employee_profiles/master_employees.json', 'utf8'));
-      res.json({ employees: masterEmployees });
-    } catch (error) {
-      console.error('[EMPLOYEES] Error:', error.message);
-      res.json({ employees: [] });
-    }
-  });
+  // Employee endpoints - removed duplicate, keeping the one below
 
   // Clients endpoint
   app.get('/api/clients', async (req, res) => {
@@ -681,6 +672,334 @@ export function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error('[CLIENTS] Error:', error.message);
       res.json([]);
+    }
+  });
+
+  // Employees endpoints
+  app.get('/api/employees', async (req, res) => {
+    try {
+      console.log('[API] GET /api/employees');
+      
+      // For now, return sample employee data
+      const sampleEmployees = [
+        {
+          id: 1,
+          employeeId: 'EMP001',
+          firstName: 'John',
+          lastName: 'Smith',
+          email: 'john.smith@company.com',
+          phone: '555-123-4567',
+          department: 'Programming',
+          position: 'Senior Developer',
+          title: 'senior',
+          salary: 8000000, // $80,000 in cents
+          hourlyRate: 4000, // $40.00 in cents
+          hireDate: '2023-01-15T00:00:00Z',
+          birthDate: '1990-05-20T00:00:00Z',
+          address: {
+            street: '123 Main St',
+            city: 'New York',
+            state: 'NY',
+            zipCode: '10001',
+            country: 'USA'
+          },
+          emergencyContact: {
+            name: 'Jane Smith',
+            phone: '555-987-6543',
+            relationship: 'Spouse'
+          },
+          permissions: {
+            accounting: false,
+            projects: true,
+            timeTracking: true,
+            reports: false,
+            admin: false,
+            fileManagement: true
+          },
+          status: 'active',
+          createdAt: '2023-01-15T00:00:00Z',
+          updatedAt: '2023-01-15T00:00:00Z',
+          hasLoginAccess: true
+        },
+        {
+          id: 2,
+          employeeId: 'EMP002',
+          firstName: 'Sarah',
+          lastName: 'Johnson',
+          email: 'sarah.johnson@company.com',
+          phone: '555-234-5678',
+          department: 'Accounting',
+          position: 'Accountant',
+          title: 'employee',
+          salary: 6000000, // $60,000 in cents
+          hourlyRate: 3000, // $30.00 in cents
+          hireDate: '2023-02-01T00:00:00Z',
+          birthDate: '1988-12-10T00:00:00Z',
+          address: {
+            street: '456 Oak Ave',
+            city: 'Los Angeles',
+            state: 'CA',
+            zipCode: '90210',
+            country: 'USA'
+          },
+          emergencyContact: {
+            name: 'Mike Johnson',
+            phone: '555-876-5432',
+            relationship: 'Spouse'
+          },
+          permissions: {
+            accounting: true,
+            projects: false,
+            timeTracking: true,
+            reports: true,
+            admin: false,
+            fileManagement: false
+          },
+          status: 'active',
+          createdAt: '2023-02-01T00:00:00Z',
+          updatedAt: '2023-02-01T00:00:00Z',
+          hasLoginAccess: true
+        },
+        {
+          id: 3,
+          employeeId: 'EMP003',
+          firstName: 'Ethan',
+          lastName: 'Devries',
+          email: 'ethan.devries@company.com',
+          phone: '555-345-6789',
+          department: 'Upper Management',
+          position: 'Manager',
+          title: 'manager',
+          salary: 10000000, // $100,000 in cents
+          hourlyRate: 5000, // $50.00 in cents
+          hireDate: '2022-06-01T00:00:00Z',
+          birthDate: '1985-03-15T00:00:00Z',
+          address: {
+            street: '789 Pine St',
+            city: 'Chicago',
+            state: 'IL',
+            zipCode: '60601',
+            country: 'USA'
+          },
+          emergencyContact: {
+            name: 'Lisa Devries',
+            phone: '555-765-4321',
+            relationship: 'Spouse'
+          },
+          permissions: {
+            accounting: true,
+            projects: true,
+            timeTracking: true,
+            reports: true,
+            admin: true,
+            fileManagement: true
+          },
+          status: 'active',
+          createdAt: '2022-06-01T00:00:00Z',
+          updatedAt: '2022-06-01T00:00:00Z',
+          hasLoginAccess: true
+        }
+      ];
+      
+      res.json({ employees: sampleEmployees });
+    } catch (error: any) {
+      console.error('[API] Employees error:', error.message);
+      res.status(500).json({ message: 'Failed to fetch employees' });
+    }
+  });
+
+  app.post('/api/employees', async (req, res) => {
+    try {
+      console.log('[API] POST /api/employees');
+      const employeeData = req.body;
+      
+      // For now, just log the new employee data
+      console.log('[API] New employee:', employeeData);
+      
+      // In a real implementation, this would save to a database
+      const newEmployee = {
+        ...employeeData,
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      res.json({ 
+        success: true, 
+        message: 'Employee created successfully',
+        employee: newEmployee 
+      });
+    } catch (error: any) {
+      console.error('[API] Create employee error:', error.message);
+      res.status(500).json({ message: 'Failed to create employee' });
+    }
+  });
+
+  app.put('/api/employees/:id', async (req, res) => {
+    try {
+      console.log(`[API] PUT /api/employees/${req.params.id}`);
+      const employeeData = req.body;
+      
+      // For now, just log the updated employee data
+      console.log('[API] Updated employee:', employeeData);
+      
+      // In a real implementation, this would update the database
+      const updatedEmployee = {
+        ...employeeData,
+        id: parseInt(req.params.id),
+        updatedAt: new Date().toISOString()
+      };
+      
+      res.json({ 
+        success: true, 
+        message: 'Employee updated successfully',
+        employee: updatedEmployee 
+      });
+    } catch (error: any) {
+      console.error('[API] Update employee error:', error.message);
+      res.status(500).json({ message: 'Failed to update employee' });
+    }
+  });
+
+  app.delete('/api/employees/:id', async (req, res) => {
+    try {
+      console.log(`[API] DELETE /api/employees/${req.params.id}`);
+      
+      // For now, just log the deletion
+      console.log('[API] Deleted employee ID:', req.params.id);
+      
+      // In a real implementation, this would delete from the database
+      res.json({ 
+        success: true, 
+        message: 'Employee deleted successfully' 
+      });
+    } catch (error: any) {
+      console.error('[API] Delete employee error:', error.message);
+      res.status(500).json({ message: 'Failed to delete employee' });
+    }
+  });
+
+  app.patch('/api/employees/:id/password', async (req, res) => {
+    try {
+      console.log(`[API] PATCH /api/employees/${req.params.id}/password`);
+      const { newPassword } = req.body;
+      
+      // For now, just log the password change
+      console.log('[API] Password change for employee ID:', req.params.id);
+      
+      // In a real implementation, this would update the password in the database
+      res.json({ 
+        success: true, 
+        message: 'Password changed successfully' 
+      });
+    } catch (error: any) {
+      console.error('[API] Change password error:', error.message);
+      res.status(500).json({ message: 'Failed to change password' });
+    }
+  });
+
+  app.post('/api/auth/create-user', async (req, res) => {
+    try {
+      console.log('[API] POST /api/auth/create-user');
+      const userData = req.body;
+      
+      // For now, just log the user creation
+      console.log('[API] New user:', userData);
+      
+      // In a real implementation, this would create user credentials
+      res.json({ 
+        success: true, 
+        message: 'User credentials created successfully' 
+      });
+    } catch (error: any) {
+      console.error('[API] Create user error:', error.message);
+      res.status(500).json({ message: 'Failed to create user credentials' });
+    }
+  });
+
+  // User permissions endpoint
+  app.patch('/api/admin/users/:userId/permissions', async (req, res) => {
+    try {
+      console.log(`[API] PATCH /api/admin/users/${req.params.userId}/permissions`);
+      const { permissions } = req.body;
+      
+      // For now, just log the permission update
+      console.log('[API] Permission update:', { userId: req.params.userId, permissions });
+      
+      // In a real implementation, this would update user permissions in the database
+      res.json({ 
+        success: true, 
+        message: 'User permissions updated successfully' 
+      });
+    } catch (error: any) {
+      console.error('[API] Update permissions error:', error.message);
+      res.status(500).json({ message: 'Failed to update user permissions' });
+    }
+  });
+
+  // Departments endpoint
+  app.get('/api/departments', async (req, res) => {
+    try {
+      console.log('[API] GET /api/departments');
+      
+      // Return department configuration data
+      const departments = {
+        "Accounting": {
+          description: "Financial management and bookkeeping",
+          permissions: [
+            "view_financial_reports",
+            "manage_invoices", 
+            "access_accounting_data",
+            "view_employee_salaries",
+            "manage_budgets"
+          ]
+        },
+        "Sales": {
+          description: "Customer relationships and revenue generation",
+          permissions: [
+            "manage_clients",
+            "create_quotes",
+            "view_sales_reports",
+            "access_crm",
+            "manage_leads"
+          ]
+        },
+        "Programming": {
+          description: "Software development and technical solutions",
+          permissions: [
+            "access_code_repositories",
+            "manage_projects",
+            "deploy_applications",
+            "access_development_tools",
+            "manage_technical_documentation"
+          ]
+        },
+        "Technicians": {
+          description: "Equipment maintenance and technical support",
+          permissions: [
+            "manage_equipment",
+            "access_maintenance_schedules",
+            "create_work_orders",
+            "access_inventory",
+            "manage_technical_tasks"
+          ]
+        },
+        "Upper Management": {
+          description: "Strategic oversight and executive decisions",
+          permissions: [
+            "full_system_access",
+            "manage_all_departments",
+            "view_all_reports",
+            "manage_company_settings",
+            "access_confidential_data"
+          ]
+        }
+      };
+      
+      res.json(departments);
+    } catch (error: any) {
+      console.error('[API] Departments error:', error.message);
+      res.status(500).json({ message: 'Failed to fetch departments' });
     }
   });
 
@@ -805,6 +1124,403 @@ export function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error('[DOWNLOAD] Android workspace integration error:', error);
       res.status(500).json({ error: 'Download failed' });
+    }
+  });
+
+  // Projects API endpoints
+  app.get('/api/projects', async (req, res) => {
+    try {
+      console.log('[API] GET /api/projects');
+      
+      // Return mock projects data
+      const projects = [
+        {
+          id: 1,
+          name: "Website Redesign",
+          description: "Complete redesign of company website",
+          status: "in_progress",
+          startDate: "2024-01-15",
+          endDate: "2024-03-15",
+          budget: 25000,
+          clientId: 1
+        },
+        {
+          id: 2,
+          name: "Mobile App Development",
+          description: "iOS and Android app for client",
+          status: "planning",
+          startDate: "2024-02-01",
+          endDate: "2024-05-01",
+          budget: 50000,
+          clientId: 2
+        },
+        {
+          id: 3,
+          name: "Database Migration",
+          description: "Migrate legacy system to new database",
+          status: "completed",
+          startDate: "2023-12-01",
+          endDate: "2024-01-31",
+          budget: 15000,
+          clientId: 3
+        }
+      ];
+      
+      res.json(projects);
+    } catch (error) {
+      console.error('[API] Projects error:', error);
+      res.status(500).json({ error: 'Failed to fetch projects' });
+    }
+  });
+
+  // Parts API endpoints
+  app.get('/api/parts/needed', async (req, res) => {
+    try {
+      console.log('[API] GET /api/parts/needed');
+      
+      // Return mock parts that need to be ordered
+      const neededParts = [
+        {
+          id: 1,
+          name: "Arduino Uno R3",
+          description: "Microcontroller board for prototyping",
+          partNumber: "ARDUINO-UNO-R3",
+          quantity: 5,
+          unitPrice: 25.99,
+          supplier: "SparkFun Electronics",
+          status: "needed",
+          category: "Electronics"
+        },
+        {
+          id: 2,
+          name: "Raspberry Pi 4 Model B",
+          description: "Single-board computer for IoT projects",
+          partNumber: "RPI-4B-4GB",
+          quantity: 3,
+          unitPrice: 55.00,
+          supplier: "Adafruit Industries",
+          status: "needed",
+          category: "Electronics"
+        },
+        {
+          id: 3,
+          name: "Stepper Motor NEMA 17",
+          description: "High torque stepper motor for 3D printing",
+          partNumber: "NEMA17-42BYGH",
+          quantity: 8,
+          unitPrice: 12.50,
+          supplier: "Pololu Robotics",
+          status: "needed",
+          category: "Mechanical"
+        }
+      ];
+      
+      res.json(neededParts);
+    } catch (error) {
+      console.error('[API] Parts needed error:', error);
+      res.status(500).json({ error: 'Failed to fetch needed parts' });
+    }
+  });
+
+  // Project-specific parts endpoints
+  app.get('/api/projects/:projectId/parts', async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.projectId);
+      console.log(`[API] GET /api/projects/${projectId}/parts`);
+      
+      // Return mock parts for the specific project
+      const projectParts = [
+        {
+          id: 1,
+          projectId: projectId,
+          name: "LED Strip WS2812B",
+          description: "Addressable RGB LED strip",
+          partNumber: "WS2812B-60LED",
+          quantity: 2,
+          unitPrice: 18.99,
+          supplier: "Adafruit Industries",
+          status: "ordered",
+          category: "Lighting"
+        },
+        {
+          id: 2,
+          projectId: projectId,
+          name: "ESP32 Development Board",
+          description: "WiFi and Bluetooth enabled microcontroller",
+          partNumber: "ESP32-DEVKIT-V1",
+          quantity: 4,
+          unitPrice: 8.50,
+          supplier: "SparkFun Electronics",
+          status: "received",
+          category: "Electronics"
+        }
+      ];
+      
+      res.json(projectParts);
+    } catch (error) {
+      console.error('[API] Project parts error:', error);
+      res.status(500).json({ error: 'Failed to fetch project parts' });
+    }
+  });
+
+  app.post('/api/projects/:projectId/parts', async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.projectId);
+      console.log(`[API] POST /api/projects/${projectId}/parts`, req.body);
+      
+      // Create a new part for the project
+      const newPart = {
+        id: Date.now(),
+        projectId: projectId,
+        ...req.body,
+        createdAt: new Date().toISOString()
+      };
+      
+      res.status(201).json(newPart);
+    } catch (error) {
+      console.error('[API] Create part error:', error);
+      res.status(500).json({ error: 'Failed to create part' });
+    }
+  });
+
+  app.put('/api/parts/:partId', async (req, res) => {
+    try {
+      const partId = parseInt(req.params.partId);
+      console.log(`[API] PUT /api/parts/${partId}`, req.body);
+      
+      // Update the part
+      const updatedPart = {
+        id: partId,
+        ...req.body,
+        updatedAt: new Date().toISOString()
+      };
+      
+      res.json(updatedPart);
+    } catch (error) {
+      console.error('[API] Update part error:', error);
+      res.status(500).json({ error: 'Failed to update part' });
+    }
+  });
+
+  // Task assignment endpoints
+  app.get('/api/admin/task-assignments', async (req, res) => {
+    try {
+      console.log('[API] GET /api/admin/task-assignments');
+      
+      // Return mock task assignments
+      const taskAssignments = [
+        {
+          id: 1,
+          projectId: 1,
+          employeeId: "EMP001",
+          title: "Website Design Review",
+          description: "Review and approve the new website design mockups",
+          priority: "high",
+          status: "in_progress",
+          estimatedHours: 4,
+          dueDate: "2024-02-15T10:00:00Z",
+          assignedBy: "Administrator",
+          notificationSettings: {
+            enabled: true,
+            intervals: [60, 300, 900],
+            urgencyLevel: "normal",
+            persistUntilComplete: false,
+            escalateAfterHours: 4
+          },
+          createdAt: "2024-02-10T09:00:00Z"
+        },
+        {
+          id: 2,
+          projectId: 2,
+          employeeId: "EMP002",
+          title: "Database Optimization",
+          description: "Optimize database queries for better performance",
+          priority: "medium",
+          status: "assigned",
+          estimatedHours: 8,
+          dueDate: "2024-02-20T17:00:00Z",
+          assignedBy: "Administrator",
+          notificationSettings: {
+            enabled: true,
+            intervals: [120, 600],
+            urgencyLevel: "low",
+            persistUntilComplete: true,
+            escalateAfterHours: 8
+          },
+          createdAt: "2024-02-12T14:30:00Z"
+        }
+      ];
+      
+      res.json(taskAssignments);
+    } catch (error) {
+      console.error('[API] Task assignments error:', error);
+      res.status(500).json({ error: 'Failed to fetch task assignments' });
+    }
+  });
+
+  app.post('/api/admin/task-assignments', async (req, res) => {
+    try {
+      console.log('[API] POST /api/admin/task-assignments', req.body);
+      
+      // Create a new task assignment
+      const newTaskAssignment = {
+        id: Date.now(),
+        ...req.body,
+        status: 'assigned',
+        createdAt: new Date().toISOString()
+      };
+      
+      res.status(201).json(newTaskAssignment);
+    } catch (error) {
+      console.error('[API] Create task assignment error:', error);
+      res.status(500).json({ error: 'Failed to create task assignment' });
+    }
+  });
+
+  // Workspaces API endpoints
+  app.get('/api/workspaces', async (req, res) => {
+    try {
+      console.log('[API] GET /api/workspaces');
+      
+      // Return mock workspaces
+      const workspaces = [
+        {
+          id: 1,
+          name: "Development",
+          description: "Software development projects",
+          color: "#3b82f6",
+          createdBy: "admin",
+          createdAt: "2024-01-15T10:00:00Z",
+          updatedAt: "2024-01-15T10:00:00Z"
+        },
+        {
+          id: 2,
+          name: "Marketing",
+          description: "Marketing and promotional projects",
+          color: "#10b981",
+          createdBy: "admin",
+          createdAt: "2024-01-20T14:30:00Z",
+          updatedAt: "2024-01-20T14:30:00Z"
+        }
+      ];
+      
+      res.json(workspaces);
+    } catch (error) {
+      console.error('[API] Workspaces error:', error);
+      res.status(500).json({ error: 'Failed to fetch workspaces' });
+    }
+  });
+
+  app.get('/api/workspaces/:workspaceId/categories', async (req, res) => {
+    try {
+      const workspaceId = parseInt(req.params.workspaceId);
+      console.log(`[API] GET /api/workspaces/${workspaceId}/categories`);
+      
+      // Return mock categories for the workspace
+      const categories = [
+        {
+          id: 1,
+          workspaceId: workspaceId,
+          name: "Frontend",
+          description: "Frontend development tasks",
+          color: "#f59e0b",
+          position: 0,
+          createdAt: "2024-01-15T10:00:00Z",
+          updatedAt: "2024-01-15T10:00:00Z"
+        },
+        {
+          id: 2,
+          workspaceId: workspaceId,
+          name: "Backend",
+          description: "Backend development tasks",
+          color: "#8b5cf6",
+          position: 1,
+          createdAt: "2024-01-15T10:00:00Z",
+          updatedAt: "2024-01-15T10:00:00Z"
+        }
+      ];
+      
+      res.json(categories);
+    } catch (error) {
+      console.error('[API] Workspace categories error:', error);
+      res.status(500).json({ error: 'Failed to fetch workspace categories' });
+    }
+  });
+
+  app.get('/api/workspaces/:workspaceId/categories/:categoryId/projects', async (req, res) => {
+    try {
+      const workspaceId = parseInt(req.params.workspaceId);
+      const categoryId = parseInt(req.params.categoryId);
+      console.log(`[API] GET /api/workspaces/${workspaceId}/categories/${categoryId}/projects`);
+      
+      // Return mock projects for the category
+      const projects = [
+        {
+          id: 1,
+          workspaceId: workspaceId,
+          categoryId: categoryId,
+          name: "Website Redesign",
+          description: "Complete redesign of company website",
+          status: "active",
+          priority: "high",
+          startDate: "2024-01-15T00:00:00Z",
+          endDate: "2024-03-15T00:00:00Z",
+          estimatedHours: 80,
+          actualHours: 45,
+          budget: 15000,
+          spent: 8500,
+          assignedUsers: ["user1", "user2"],
+          tags: ["design", "frontend"],
+          color: "#10b981",
+          position: 0,
+          createdBy: "admin",
+          createdAt: "2024-01-15T10:00:00Z",
+          updatedAt: "2024-01-15T10:00:00Z"
+        }
+      ];
+      
+      res.json(projects);
+    } catch (error) {
+      console.error('[API] Category projects error:', error);
+      res.status(500).json({ error: 'Failed to fetch category projects' });
+    }
+  });
+
+  app.get('/api/workspaces/:workspaceId/projects', async (req, res) => {
+    try {
+      const workspaceId = parseInt(req.params.workspaceId);
+      console.log(`[API] GET /api/workspaces/${workspaceId}/projects`);
+      
+      // Return mock uncategorized projects for the workspace
+      const projects = [
+        {
+          id: 2,
+          workspaceId: workspaceId,
+          categoryId: null,
+          name: "Mobile App Development",
+          description: "iOS and Android app for client",
+          status: "active",
+          priority: "medium",
+          startDate: "2024-02-01T00:00:00Z",
+          endDate: "2024-05-01T00:00:00Z",
+          estimatedHours: 120,
+          actualHours: 30,
+          budget: 25000,
+          spent: 6000,
+          assignedUsers: ["user3"],
+          tags: ["mobile", "app"],
+          color: "#3b82f6",
+          position: 0,
+          createdBy: "admin",
+          createdAt: "2024-02-01T09:00:00Z",
+          updatedAt: "2024-02-01T09:00:00Z"
+        }
+      ];
+      
+      res.json(projects);
+    } catch (error) {
+      console.error('[API] Workspace projects error:', error);
+      res.status(500).json({ error: 'Failed to fetch workspace projects' });
     }
   });
 

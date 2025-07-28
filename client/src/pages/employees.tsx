@@ -1015,7 +1015,7 @@ export default function EmployeesPage() {
                   }}
                   className="text-white shadow-sm px-3 py-1 rounded-xl"
                 >
-                  {employee.status.replace('_', ' ').toUpperCase()}
+                  {(employee.status || 'active').replace('_', ' ').toUpperCase()}
                 </Badge>
               </div>
             </CardHeader>
